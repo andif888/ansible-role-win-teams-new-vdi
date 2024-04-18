@@ -33,6 +33,9 @@ teams_x64_download_url: 'https://go.microsoft.com/fwlink/?linkid=2196106'
 # @var teams_is_wvd_environment:description: Set to true if installed in Azure Virtual Desktop environment
 teams_is_wvd_environment: true
 
+# @var tteams_disable_autoupdate:description: Disable auto-update
+teams_disable_autoupdate: true
+
 # @var teams_installer_run_uninstall_first:description: Set to true to uninstall Teams first. This cause the machine-wide installer to truly update.
 # teams_installer_run_uninstall_first: false
 

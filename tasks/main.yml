@@ -81,6 +81,14 @@
     type: dword
   when: teams_is_wvd_environment
 
+- name: Set registy key to disable autoupdate
+  ansible.windows.win_regedit:
+    path: HKLM:\SOFTWARE\Microsoft\Teams
+    name: disableAutoUpdate
+    data: 1
+    type: dword
+  when: teams_disable_autoupdate
+
 - name: Install vc_redist
   ansible.windows.win_package:
     path: '{{ teams_download_dir }}\{{ teams_vc_redist_download_filename }}'

@@ -8,6 +8,7 @@ Role to install Microsoft Teams (new) on Windows VDI
 - [Default Variables](#default-variables)
   - [teams_bootstrapper_download_filename](#teams_bootstrapper_download_filename)
   - [teams_bootstrapper_download_url](#teams_bootstrapper_download_url)
+  - [teams_disable_autoupdate](#teams_disable_autoupdate)
   - [teams_download_dir](#teams_download_dir)
   - [teams_install_meeting_addin](#teams_install_meeting_addin)
   - [teams_installer_run_uninstall_first](#teams_installer_run_uninstall_first)
@@ -20,6 +21,7 @@ Role to install Microsoft Teams (new) on Windows VDI
   - [teams_web_rtc_download_url](#teams_web_rtc_download_url)
   - [teams_x64_download_filename](#teams_x64_download_filename)
   - [teams_x64_download_url](#teams_x64_download_url)
+  - [tteams_disable_autoupdate](#tteams_disable_autoupdate)
 - [Discovered Tags](#discovered-tags)
 - [Dependencies](#dependencies)
 - [License](#license)
@@ -52,6 +54,14 @@ Teams Bootstrapper download URL
 
 ```YAML
 teams_bootstrapper_download_url: https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409
+```
+
+### teams_disable_autoupdate
+
+#### Default value
+
+```YAML
+teams_disable_autoupdate: true
 ```
 
 ### teams_download_dir
@@ -167,6 +177,10 @@ Teams 64-bit download URL
 ```YAML
 teams_x64_download_url: https://go.microsoft.com/fwlink/?linkid=2196106
 ```
+
+### tteams_disable_autoupdate
+
+Disable auto-update
 
 ## Discovered Tags
 
