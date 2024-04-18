@@ -1,0 +1,133 @@
+---
+# tasks file for ansible-role-win-teams
+- name: Ensure {{ teams_download_dir }} exists
+  ansible.windows.win_file:
+    path: "{{ teams_download_dir }}"
+    state: directory
+
+- name: Download vc_redist {{ teams_vc_redist_download_url }}
+  ansible.windows.win_get_url:
+    follow_redirects: "{{ teams_download_follow_redirects | default(omit) }}"
+    force: "{{ teams_download_force | default(omit) }}"
+    dest: '{{ teams_download_dir }}\{{ teams_vc_redist_download_filename }}'
+    url: "{{ teams_vc_redist_download_url }}"
+    validate_certs: '{{ validate_certs | default(omit) }}'
+    proxy_password: '{{ proxy_password | default(omit) }}'
+    proxy_url : '{{ proxy_url  | default(omit) }}'
+    proxy_use_default_credential: '{{ proxy_use_default_credential | default(omit) }}'
+    proxy_username: '{{ proxy_username | default(omit) }}'
+  register: teams_vc_redist_download_result
+
+- name: Download web_rtc {{ teams_web_rtc_download_url }}
+  ansible.windows.win_get_url:
+    follow_redirects: "{{ teams_download_follow_redirects | default(omit) }}"
+    force: "{{ teams_download_force | default(omit) }}"
+    dest: '{{ teams_download_dir }}\{{ teams_web_rtc_download_filename }}'
+    url: "{{ teams_web_rtc_download_url }}"
+    validate_certs: '{{ validate_certs | default(omit) }}'
+    proxy_password: '{{ proxy_password | default(omit) }}'
+    proxy_url : '{{ proxy_url  | default(omit) }}'
+    proxy_use_default_credential: '{{ proxy_use_default_credential | default(omit) }}'
+    proxy_username: '{{ proxy_username | default(omit) }}'
+  register: teams_web_rtc_download_result
+
+- name: Download teams bootstrapper {{ teams_bootstrapper_download_url }}
+  ansible.windows.win_get_url:
+    follow_redirects: "{{ teams_download_follow_redirects | default(omit) }}"
+    force: "{{ teams_download_force | default(omit) }}"
+    dest: '{{ teams_download_dir }}\{{ teams_bootstrapper_download_filename }}'
+    url: "{{ teams_bootstrapper_download_url }}"
+    validate_certs: '{{ validate_certs | default(omit) }}'
+    proxy_password: '{{ proxy_password | default(omit) }}'
+    proxy_url : '{{ proxy_url  | default(omit) }}'
+    proxy_use_default_credential: '{{ proxy_use_default_credential | default(omit) }}'
+    proxy_username: '{{ proxy_username | default(omit) }}'
+  register: teams_bootstrapper_download_result
+
+- name: Download teams x64 msix {{ teams_x64_download_url }}
+  ansible.windows.win_get_url:
+    follow_redirects: "{{ teams_download_follow_redirects | default(omit) }}"
+    force: "{{ teams_download_force | default(omit) }}"
+    dest: '{{ teams_download_dir }}\{{ teams_x64_download_filename }}'
+    url: "{{ teams_x64_download_url }}"
+    validate_certs: '{{ validate_certs | default(omit) }}'
+    proxy_password: '{{ proxy_password | default(omit) }}'
+    proxy_url : '{{ proxy_url  | default(omit) }}'
+    proxy_use_default_credential: '{{ proxy_use_default_credential | default(omit) }}'
+    proxy_username: '{{ proxy_username | default(omit) }}'
+  register: teams_x64_download_result
+
+
+# - name: Uninstall Teams
+#   block:
+#     - name: Uninstall Teams x64
+#       ansible.windows.win_package:
+#         path: '{{ teams_download_dir }}\{{ teams_bootstrapper_download_filename }}'
+#         state: present
+#         arguments: '-x'
+#       register: teams_bootstrapper_x64_uninstall_result
+
+#     - name: Debug teams_bootstrapper_x64_uninstall_result
+#       ansible.builtin.debug:
+#         var: teams_bootstrapper_x64_uninstall_result
+#       when: teams_bootstrapper_x64_uninstall_result is defined
+#   when: teams_installer_run_uninstall_first
+
+- name: Set registy key for WVD environment
+  ansible.windows.win_regedit:
+    path: HKLM:\SOFTWARE\Microsoft\Teams
+    name: IsWVDEnvironment
+    data: 1
+    type: dword
+  when: teams_is_wvd_environment
+
+- name: Install vc_redist
+  ansible.windows.win_package:
+    path: '{{ teams_download_dir }}\{{ teams_vc_redist_download_filename }}'
+    product_id: '{{ teams_vc_redist_product_id }}'
+    state: present
+    arguments: '/passive /norestart'
+  register: teams_vc_redist_install_result
+  when: teams_is_wvd_environment
+
+- name: Debug teams_vc_redist_install_result
+  ansible.builtin.debug:
+    var: teams_vc_redist_install_result
+  when: teams_vc_redist_install_result is defined
+
+- name: Install WebRTC
+  ansible.windows.win_package:
+    path: '{{ teams_download_dir }}\{{ teams_web_rtc_download_filename }}'
+    state: present
+  register: teams_web_rtc_install_result
+  when: teams_is_wvd_environment
+
+- name: Debug teams_web_rtc_install_result
+  ansible.builtin.debug:
+    var: teams_web_rtc_install_result
+  when: teams_web_rtc_install_result is defined
+
+- name: Install Teams x64
+  ansible.windows.win_package:
+    path: '{{ teams_download_dir }}\{{ teams_bootstrapper_download_filename }}'
+    state: present
+    arguments: '-p -o "{{ teams_download_dir }}\{{ teams_x64_download_filename }}"'
+  register: teams_bootstrapper_x64_install_result
+
+- name: Debug teams_bootstrapper_x64_install_result
+  ansible.builtin.debug:
+    var: teams_bootstrapper_x64_install_result
+  when: teams_bootstrapper_x64_install_result is defined
+
+- name: Install MeetinAddin
+  ansible.builtin.import_tasks: install-meeting-addin.yml
+  when:
+    - teams_install_meeting_addin
+  tags: teams-install-meeting-addin
+
+- name: Remove {{ teams_download_dir }}
+  ansible.windows.win_file:
+    path: "{{ teams_download_dir }}"
+    state: absent
+  when: teams_remove_extract_dir
+...

@@ -1,0 +1,41 @@
+---
+# defaults file for ansible-role-win-teams
+
+# @var teams_download_dir:description: Download directory for installer files
+teams_download_dir: '{{ ansible_env.SystemRoot }}\temp\teams_install'
+
+# @var teams_remove_extract_dir:description: Remove download directory at the end
+teams_remove_extract_dir: true
+
+# @var teams_vc_redist_download_filename:description: VC Redistributable download filename
+teams_vc_redist_download_filename: "vc_redist.x64.exe"
+# @var teams_vc_redist_download_url:description: VC Redistributable download URL
+teams_vc_redist_download_url: 'https://aka.ms/vs/17/release/vc_redist.x64.exe'
+
+# @var teams_vc_redist_product_id:description: VC Redistributable product ID
+teams_vc_redist_product_id: '{A181A302-3F6D-4BAD-97A8-A426A6499D78}'
+
+# @var teams_web_rtc_download_filename:description: Web RTC download filename
+teams_web_rtc_download_filename: "MsRdcWebRTCSvc_HostSetup_x64.msi"
+# @var teams_web_rtc_download_url:description: Web RTC download URL
+teams_web_rtc_download_url: 'https://aka.ms/msrdcwebrtcsvc/msi'
+
+# @var teams_bootstrapper_download_filename:description: Teams Bootstrapper download filename
+teams_bootstrapper_download_filename: "teamsbootstrapper.exe"
+# @var teams_bootstrapper_download_url:description: Teams Bootstrapper download URL
+teams_bootstrapper_download_url: 'https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409'
+
+# @var teams_x64_download_filename:description: Teams 64-bit download filename
+teams_x64_download_filename: "MSTeams-x64.msix"
+# @var teams_x64_download_url:description: Teams 64-bit download URL
+teams_x64_download_url: 'https://go.microsoft.com/fwlink/?linkid=2196106'
+
+# @var teams_is_wvd_environment:description: Set to true if installed in Azure Virtual Desktop environment
+teams_is_wvd_environment: true
+
+# @var teams_installer_run_uninstall_first:description: Set to true to uninstall Teams first. This cause the machine-wide installer to truly update.
+# teams_installer_run_uninstall_first: false
+
+# @var teams_install_meeting_addin:description: Set to true to install an register Teams addin loader machine-wide
+teams_install_meeting_addin: true
+...

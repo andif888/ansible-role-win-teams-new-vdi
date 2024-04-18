@@ -1,0 +1,6 @@
+---
+- hosts: windows
+
+  roles:
+    - ansible-role-win-teams-new-vdi
+...
