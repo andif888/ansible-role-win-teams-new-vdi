@@ -3,7 +3,6 @@
   ansible.windows.win_shell: |
     Get-AppXPackage -AllUsers -Name "*msteams*" | Select-Object -ExpandProperty InstallLocation | ConvertTo-Json
   register: result_teams_install_location
-  tags: teams-install-meeting-addin
 
 - name: Debug result_teams_install_location
   ansible.builtin.debug:
@@ -12,7 +11,6 @@
 - name: Set fact teams_install_location
   ansible.builtin.set_fact:
     teams_install_location: "{{ result_teams_install_location.stdout | from_json }}"
-  tags: teams-install-meeting-addin
 
 # - name: Install MeetingAddin - find dir
 #   ansible.windows.win_find:
@@ -21,29 +19,25 @@
 #     file_type: directory
 #     patterns: MSTeams_*
 #   register: results_find_teams_dir
-#   tags: teams-install-meeting-addin
 
 # - name: Debug results_find_teams_dir
 #   ansible.builtin.debug:
 #     var: results_find_teams_dir
-#   tags: teams-install-meeting-addin
 
 # - name: Msg results_find_teams_dir
 #   ansible.builtin.debug:
 #     msg: '{{ results_find_teams_dir.files | map(attribute="path") | last }}'
-#   tags: teams-install-meeting-addin
+
 
 # - name: Set fact meetingaddin msi file
 #   ansible.builtin.set_fact:
 #     teams_meeting_addin_msi_file_path: '{{ results_find_teams_dir.files | map(attribute="path") | last }}\MicrosoftTeamsMeetingAddinInstaller.msi'
-#   tags: teams-install-meeting-addin
 
 - name: Install Teams Meeting Addin
   block:
     - name: Set fact meetingaddin msi file
       ansible.builtin.set_fact:
         teams_meeting_addin_msi_file_path: '{{ teams_install_location }}\MicrosoftTeamsMeetingAddinInstaller.msi'
-      tags: teams-install-meeting-addin
 
     - name: Get teams_meeting_addin_msi binary version
       ansible.windows.win_shell: |
@@ -83,12 +77,10 @@
         state: present
         arguments: 'ALLUSERS=1 TARGETDIR="{{ teams_addin_target_dir }}"'
       register: result_teams_meeting_addin_install
-      tags: teams-install-meeting-addin
 
     - name: Debug result_teams_meeting_addin_install
       ansible.builtin.debug:
         var: result_teams_meeting_addin_install
-      tags: teams-install-meeting-addin
   when:
     - result_teams_install_location is defined
     - result_teams_install_location | length > 0
@@ -102,12 +94,10 @@
       args:
         executable: cmd
       register: result_x64_dll_register
-      tags: teams-install-meeting-addin
 
     - name: Microsoft.Teams.AddinLoader - x64 dll result
       ansible.builtin.debug:
         var: result_x64_dll_register
-      tags: teams-install-meeting-addin
 
     - name: Microsoft.Teams.AddinLoader - x86 dll register
       ansible.windows.win_shell: |
@@ -115,12 +105,10 @@
       args:
         executable: cmd
       register: result_x86_dll_register
-      tags: teams-install-meeting-addin
 
     - name: Microsoft.Teams.AddinLoader - x86 dll result
       ansible.builtin.debug:
         var: result_x86_dll_register
-      tags: teams-install-meeting-addin
   when:
     - teams_addin_loader_dll_x64 is defined
     - teams_addin_loader_dll_x64 | length > 0
