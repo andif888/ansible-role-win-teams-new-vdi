@@ -11,7 +11,6 @@ Role to install Microsoft Teams (new) on Windows VDI
   - [teams_disable_autoupdate](#teams_disable_autoupdate)
   - [teams_download_dir](#teams_download_dir)
   - [teams_install_meeting_addin](#teams_install_meeting_addin)
-  - [teams_installer_run_uninstall_first](#teams_installer_run_uninstall_first)
   - [teams_is_wvd_environment](#teams_is_wvd_environment)
   - [teams_remove_extract_dir](#teams_remove_extract_dir)
   - [teams_vc_redist_download_filename](#teams_vc_redist_download_filename)
@@ -21,7 +20,6 @@ Role to install Microsoft Teams (new) on Windows VDI
   - [teams_web_rtc_download_url](#teams_web_rtc_download_url)
   - [teams_x64_download_filename](#teams_x64_download_filename)
   - [teams_x64_download_url](#teams_x64_download_url)
-  - [tteams_disable_autoupdate](#tteams_disable_autoupdate)
 - [Discovered Tags](#discovered-tags)
 - [Dependencies](#dependencies)
 - [License](#license)
@@ -58,6 +56,8 @@ teams_bootstrapper_download_url: https://go.microsoft.com/fwlink/?linkid=2243204
 
 ### teams_disable_autoupdate
 
+Disable auto-update
+
 #### Default value
 
 ```YAML
@@ -83,10 +83,6 @@ Set to true to install an register Teams addin loader machine-wide
 ```YAML
 teams_install_meeting_addin: true
 ```
-
-### teams_installer_run_uninstall_first
-
-Set to true to uninstall Teams first. This cause the machine-wide installer to truly update.
 
 ### teams_is_wvd_environment
 
@@ -177,10 +173,6 @@ Teams 64-bit download URL
 ```YAML
 teams_x64_download_url: https://go.microsoft.com/fwlink/?linkid=2196106
 ```
-
-### tteams_disable_autoupdate
-
-Disable auto-update
 
 ## Discovered Tags
 
