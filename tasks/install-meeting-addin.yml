@@ -12,7 +12,7 @@
 
 - name: Set fact teams_install_locations
   ansible.builtin.set_fact:
-    teams_install_locations: "{{ result_teams_install_location.stdout | from_json }}"
+    teams_install_locations: "{{ result_teams_install_location.stdout_lines }}"
   tags: "find-meeting-addin"
 
 - name: Debug result_teams_install_locations length
@@ -22,14 +22,7 @@
 
 - name: Set fact teams_install_location
   ansible.builtin.set_fact:
-    teams_install_location: "{{ teams_install_locations | last }}"
-  when: teams_install_locations | length > 1
-  tags: "find-meeting-addin"
-
-- name: Set fact teams_install_location
-  ansible.builtin.set_fact:
-    teams_install_location: "{{ teams_install_locations }}"
-  when: teams_install_locations | length < 2
+    teams_install_location: "{{ teams_install_locations | last | from_json }}"
   tags: "find-meeting-addin"
 
 - name: Debug result_teams_install_location
