@@ -3,14 +3,39 @@
   ansible.windows.win_shell: |
     Get-AppXPackage -AllUsers -Name "*msteams*" | Select-Object -ExpandProperty InstallLocation | ConvertTo-Json
   register: result_teams_install_location
+  tags: "find-meeting-addin"
 
 - name: Debug result_teams_install_location
   ansible.builtin.debug:
     var: result_teams_install_location
+  tags: "find-meeting-addin"
+
+- name: Set fact teams_install_locations
+  ansible.builtin.set_fact:
+    teams_install_locations: "{{ result_teams_install_location.stdout | from_json }}"
+  tags: "find-meeting-addin"
+
+- name: Debug result_teams_install_locations length
+  ansible.builtin.debug:
+    msg: '{{ teams_install_locations | length }}'
+  tags: "find-meeting-addin"
 
 - name: Set fact teams_install_location
   ansible.builtin.set_fact:
-    teams_install_location: "{{ result_teams_install_location.stdout | from_json }}"
+    teams_install_location: "{{ teams_install_locations | last }}"
+  when: teams_install_locations | length > 1
+  tags: "find-meeting-addin"
+
+- name: Set fact teams_install_location
+  ansible.builtin.set_fact:
+    teams_install_location: "{{ teams_install_locations }}"
+  when: teams_install_locations | length < 2
+  tags: "find-meeting-addin"
+
+- name: Debug result_teams_install_location
+  ansible.builtin.debug:
+    msg: '{{ teams_install_location }}\MicrosoftTeamsMeetingAddinInstaller.msi'
+  tags: "find-meeting-addin"
 
 # - name: Install MeetingAddin - find dir
 #   ansible.windows.win_find:
