@@ -89,6 +89,21 @@
       ansible.builtin.debug:
         msg: "{{ teams_meeting_addin_msi_binary_version_string }}"
 
+    - name: Debug teams_addin_target_dir
+      ansible.builtin.debug:
+        msg: "{{ teams_addin_target_dir }}"
+
+    - name: Uninstall Teams Meeting Addin
+      ansible.windows.win_package:
+        path: '{{ teams_meeting_addin_msi_file_path }}'
+        state: absent
+        arguments: 'ALLUSERS=1'
+      register: result_teams_meeting_addin_uninstall
+
+    - name: Debug result_teams_meeting_addin_uninstall
+      ansible.builtin.debug:
+        var: result_teams_meeting_addin_uninstall
+
     - name: Install Teams Meeting Addin
       ansible.windows.win_package:
         path: '{{ teams_meeting_addin_msi_file_path }}'
